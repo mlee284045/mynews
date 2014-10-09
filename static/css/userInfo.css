@@ -1,0 +1,47 @@
+.row div {
+    text-align: center;
+}
+
+#getStarted {
+    display: flex;
+    align-items: center;
+}
+
+#getStarted > div > h4 {
+    margin: 0;
+}
+
+#jsLogin label, #jsPasswordConfirm label, #jsPasswordReset label {
+    text-align: right;
+    width: 150px;
+}
+
+#jsRegistration input:not(:last-child){
+    margin-right: 40px;
+}
+
+
+#jsRegistration label {
+    text-align: right;
+    width: 200px;
+    /*padding-left: 10px;*/
+}
+
+@media (max-width: 768px) {
+    #jsRegistration {
+        text-align: center;
+    }
+
+    #jsRegistration input:not(:last-child){
+        margin-right: 0px;
+        clear:both;
+    }
+    #jsRegistration label {
+        text-align: left;
+        width: 165px;
+        margin-left: auto;
+        margin-right: auto;
+        display: block;
+        /*padding-left: 10px;*/
+    }
+}

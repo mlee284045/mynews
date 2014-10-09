@@ -25,11 +25,13 @@ DEBUG = True
 TEMPLATE_DEBUG = True
 
 ALLOWED_HOSTS = []
-
-
+#
+AUTH_USER_MODEL = "personal_rss.Reader"
 # Application definition
 
 INSTALLED_APPS = (
+    'personal_rss',
+    'rss_read',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -79,5 +81,19 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
+LOGIN_URL = 'login' #refers to name of url, not the actual link
+LOGIN_REDIRECT_URL = 'home'
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+PROJECT_ROOT = os.path.abspath(os.path.join(BASE_DIR, '..'))
+STATIC_ROOT = 'staticfiles'
 STATIC_URL = '/static/'
+
+STATICFILES_DIRS = (
+    os.path.join(PROJECT_ROOT, 'static'),
+)
+
+try:
+    from local_settings import *
+except ImportError:
+    pass
