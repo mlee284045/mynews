@@ -1,3 +1,8 @@
-.jumbotron {
+#mainJumbotron {
     text-align: center;
+}
+
+#newRssFeed {
+    width: 100%;
+    text-align: left;
 }

@@ -3,12 +3,17 @@
 
 {% block stylesheet %}
     <link href="{% static 'css/userInfo.css' %}" rel="stylesheet">
+    <link href="{% static 'css/home.css' %}" rel="stylesheet">
 {% endblock stylesheet %}
+
+{% block javascript %}
+    <script src="{% static 'js/read_rss.js' %}" type="text/javascript"></script>
+{% endblock %}
 
 {% block content %}
     <div class="row">
-        <div class="col-sm-8 col-sm-offset-2 col-lg-6 col-lg-offset-3">
-            <div class="jumbotron">
+        <div class="col-sm-10 col-sm-offset-1 col-lg-10 col-lg-offset-1">
+            <div class="jumbotron" id="mainJumbotron">
                 <h1>Feed Me!</h1>
                 <blockquote>
                     "Moar! Give me moar!<br>Read what you want to read.<br>Use Feed Me to get fresh articles personalized to me"
@@ -19,17 +24,31 @@
                 </blockquote>
                 <p>- Anonymous</p>
             </div>
+
             <div class="jumbotron">
                 <div class="row" id="getStarted">
-                    <div class="col-sm-8">
-                        <h4>Want to get started?</h4>
-                    </div>
-                    <div class="col-xs-10 col-xs-offset-1 col-sm-4 col-sm-offset-0">
-                        <div class="btn-group">
-                            <button class="btn"><a href="{% url 'register' %}">Register</a></button>
+                    {% if user.is_authenticated %}
+                        <div class="col-sm-10 col-sm-offset-1 col-lg-8 col-lg-offset-2">
+                            <div class="row">
+                                <div class="list-group" id="newRssFeed">
+                                    <a href="#" class="list-group-item">
+                                        <h4 class="list-group-item-heading">List group item heading</h4>
+                                        <p class="list-group-item-text">Don't press the red button</p>
+                                        <button class="btn btn-danger" id="allMyRss">Urls</button>
+                                    </a>
+                                </div>
+                            </div>
                         </div>
-
-                    </div>
+                    {% else %}
+                        <div class="col-sm-8">
+                            <h4>Want to get started?</h4>
+                        </div>
+                        <div class="col-xs-10 col-xs-offset-1 col-sm-4 col-sm-offset-0">
+                            <div class="btn-group">
+                                <button class="btn"><a href="{% url 'register' %}">Register</a></button>
+                            </div>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         </div>

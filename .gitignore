@@ -56,3 +56,5 @@ target/
 local_settings.py
 .idea/
 staticfiles/
+static/media/
+profile_pics/

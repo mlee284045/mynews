@@ -1,5 +1,7 @@
 from django.conf.urls import patterns, include, url
+from django.conf.urls.static import static
 from django.contrib import admin
+from mynews import settings
 
 urlpatterns = patterns('',
 
@@ -16,5 +18,12 @@ urlpatterns = patterns('',
     url(r'^register/$', 'personal_rss.views.register', name='register'),
     url(r'^profile/$', 'personal_rss.views.profile', name='profile'),
 
+    url(r'^view_rss/$', 'personal_rss.views.view_rss', name='view_rss'),
+    # url(r'^all_rss/$', )
+    url(r'^add_rss/$', 'personal_rss.views.add_rss', name='add_rss'),
+
     url(r'^admin/', include(admin.site.urls)),
 )
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
