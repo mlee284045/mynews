@@ -1,7 +1,12 @@
 {% extends 'base_template.html' %}
+{% load staticfiles %}
 
 {% block content %}
     <h1>Hello, World!</h1>
     <h3>Profile Page</h3>
+    {% if user.profile.url %}
     <img src="{{ user.profile.url }}" class="img-responsive" height="200" width="200">
+    {% else %}
+        <img src="{% static 'img/test_tube.png' %}" class="img-responsive" height="200" width="200">
+    {% endif %}
 {% endblock content %}

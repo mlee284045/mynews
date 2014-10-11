@@ -31,7 +31,6 @@ AUTH_USER_MODEL = "personal_rss.Reader"
 
 INSTALLED_APPS = (
     'personal_rss',
-    'rss_read',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

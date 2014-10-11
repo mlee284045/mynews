@@ -15,3 +15,12 @@ class Feed(models.Model):
 
     def __unicode__(self):
         return self.feed_url
+
+
+class Article(models.Model):
+    url = models.URLField()
+    content = models.TextField()
+    feed = models.ForeignKey(Feed, related_name='articles')
+
+    def __unicode__(self):
+        return self.url

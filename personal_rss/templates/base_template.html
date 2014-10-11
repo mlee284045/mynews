@@ -31,7 +31,7 @@
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                     <ul class="nav navbar-nav navbar-right">
                         {% if user.is_authenticated %}
-                            <li><a href="#">Add RSS</a></li>
+                            <li class="page-scroll"><a href="#newRssFeed" id="add-rss">Add RSS</a></li>
                             <li><a href="{% url 'profile' %}">Profile</a></li>
                             <li><a href="{% url 'logout' %}">Logout</a></li>
                         {% else %}

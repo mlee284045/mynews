@@ -21,6 +21,7 @@ urlpatterns = patterns('',
     url(r'^view_rss/$', 'personal_rss.views.view_rss', name='view_rss'),
     # url(r'^all_rss/$', )
     url(r'^add_rss/$', 'personal_rss.views.add_rss', name='add_rss'),
+    url(r'^save_article/$', 'personal_rss.views.save_article', name='save_article'),
 
     url(r'^admin/', include(admin.site.urls)),
 )
