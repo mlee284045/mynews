@@ -21,7 +21,9 @@ def register(request):
     return render(request, 'registration/register.html', {'form': form})
 
 
+@login_required
 def profile(request):
+    # "request.user" should be a Reader object if you've set Reader to be your AUTH_MODEL
     name = request.user.username
     reader = Reader.objects.get(username=name)
     if not reader.profile:
@@ -38,8 +40,9 @@ def profile(request):
 #
 #     return
 
-
+@login_required
 def view_rss(request):
+    # No camel case!!
     feedUrl = request.user.feeds.all()
     allUrls = []
     for url in feedUrl:
@@ -62,6 +65,7 @@ def add_rss(request):
 
 
 def save_article(request, vote):
+    # Would be good to make 'up' a constant somewhere - UP_VOTE = 'up', DOWN_VOTE = 'down'
     articles = []
     if vote == 'up':
         upVote = True
@@ -71,6 +75,7 @@ def save_article(request, vote):
     if request.method == 'POST':
         data = json.loads(request.body)
         # print data
+        # use more descriptive variables than x and y
         for x in data:
             articles.append({
                 'url': x['link'],
