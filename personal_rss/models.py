@@ -17,10 +17,12 @@ class Feed(models.Model):
         return self.feed_url
 
 
+# class Word(models.Model):
+#     text = models.CharField(max_length=30)
+
 class Article(models.Model):
     url = models.URLField()
-    content = models.TextField()
-    feed = models.ForeignKey(Feed, related_name='articles')
+    vote = models.BooleanField(default=True)
 
     def __unicode__(self):
         return self.url

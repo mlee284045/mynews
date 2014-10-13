@@ -2,7 +2,43 @@
     text-align: center;
 }
 
-#newRssFeed {
+#newRssFeed div{
     width: 100%;
     text-align: left;
+}
+
+#newRssFeed div{
+    width: 100%;
+    text-align: left;
+}
+
+#newRssFeed .articleUrl {
+    text-decoration: none;
+    color: #666;
+}
+
+#newRssFeed .articleUrl:hover {
+    text-decoration: none;
+    color: #333;
+}
+
+#newRssFeed .articleUrl:visited {
+    text-decoration: none;
+    color: #ccc;
+}
+
+#newRssFeed .label-info {
+    display: inline-flex;
+    margin-right: 10%;
+}
+
+#newRssFeed i{
+    float: right;
+    margin-right: 1%;
+    font-size: 2em;
+}
+
+#newRssFeed i:hover {
+    color: black;
+    cursor: pointer;
 }

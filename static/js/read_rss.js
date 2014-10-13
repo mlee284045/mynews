@@ -1,7 +1,26 @@
 $(document).ready(function() {
     var $rssDiv = $('#newRssFeed');
+    var allKeywords = [];
+
     var allEntries = [];
     var urlsLoaded = [];
+
+    function Keyword(newWord) {
+        this.word = newWord;
+        this.vote = 0;
+
+        this.upVote = function() {
+            this.vote += 1;
+        };
+
+        this.downVote = function() {
+            this.vote -= 1;
+        };
+    }
+
+//=====================================================================
+// This is just to allow me to make ajax calls freely
+// it's from the django docs, https://docs.djangoproject.com/en/1.7/ref/contrib/csrf/
 
     function getCookie(name) {
         var cookieValue = null;
@@ -31,14 +50,27 @@ $(document).ready(function() {
             }
         }
     });
+// =====================================================================
+// This is the google feed api call that I used, it is slightly different from the example on the
+// google feed api site.  This worked for me and my situation but there are other ways of doing it.
+// I also did some hacky(not good) thing by loading it earlier in another file called google_feed.js
 
     function getRssFeed () {
+        // Gets all stored feeds from user and sends it to google feed api to get the articles
+        // Articles are put onto the page using the function appendEntries
+        //
+        // put into a function wrapper to help control and debug project
         function googleApiCall(urls) {
             google.load("feeds", "1", {
+                // make call to google and when done loading, callback the function init(urls)
                 callback: init(urls)
             });
 
             function init(urls) {
+                // for each url in urls, call loadfeed with the parameters, {url, indx, and # of articles}
+
+                // urlsLoaded is a parallel array(basically for each url, there is a corresponding boolean field that
+                // says if the url has finished loading
                 for (var i = 0; i < urls.length; i++) {
                     console.log(i);
                     urlsLoaded[i] = false;
@@ -47,64 +79,41 @@ $(document).ready(function() {
                         indx: i,
                         noOfFeed: 4
                     });
-                    console.log('unnested api', allEntries);
                 };
-                urlsLoaded.pop();
-
+                urlsLoaded.pop(); // for some reason, I get an extra boolean value so I just pop it off to stay correct
             }
 
             function loadFeed(opt_options) {
+                // take parameters and get feed and articles from google feed
                 var loadobjects = [];
                 var url = opt_options.url;
                 var feed = new google.feeds.Feed(url);
                 feed.setNumEntries(opt_options.noOfFeed);
-                feed.load(
-                    function (result) {
-                        if (!result.error) {
 
-                            for (var i = 0; i < result.feed.entries.length; i++) {
+                feed.load(function(result) {
+                    if (!result.error) {
+                        for (var i = 0; i < result.feed.entries.length; i++) {
 //                            console.log(result.feed.entries[i]);
-                                loadobjects.push(result.feed.entries[i]);
-                            }
-                            urlsLoaded[opt_options.indx] = true;
-                            var total = allEntries.concat(loadobjects);
-                            allEntries = total;
-                            console.log(allEntries);
-                            if (urlsLoaded.every(function(el, idx, arr) {return el;})) {
-                                console.log('worked', urlsLoaded);
-                                appendEntries(allEntries);
-                            } else {
-                                console.log('passed by', urlsLoaded);
-                            }
+                            loadobjects.push(result.feed.entries[i]);
                         }
-//                    appendEntries(allEntries);
-                    });
-
-            }
-        }
-
-        function appendEntries() {
-
-            allEntries.sort(function(a, b) {
-                var dateA = new Date(a['publishedDate']), dateB = new Date(b['publishedDate']);
-                return dateB - dateA
-            });
-            //need to sort array, all, before publishing listgroupitems
-            for (var i = 0; i < allEntries.length; i++) {
-                var entry = allEntries[i];
-                $rssDiv.append(
-
-                    '<a href="' + entry['link'] + '" class="list-group-item">' +
-                        '<h4 class="list-group-item-heading">' + entry['title'] + '</h4>' +
-                        '<span class="label label-info">' + entry['publishedDate'] + '</span>' +
-                        '<p class="list-group-item-text">'+entry['contentSnippet']+'</p>' +
-                    '</a>'
-
-                );
+                        urlsLoaded[opt_options.indx] = true;
+                        var total = allEntries.concat(loadobjects);
+                        allEntries = total;
+                        console.log(allEntries);
+                        if (urlsLoaded.every(function(el, idx, arr) {return el;})) {
+                            console.log('worked', urlsLoaded);
+                            doWork(allEntries);  // function needs to be renamed, will contain the other functions
+                            // replace doWork with appendEntries and it should work
+                        } else {
+                            console.log('passed by', urlsLoaded);
+                        }
+                    }
+                });
             }
         }
 
         $.ajax({
+            // the ajax call that gets
             url: '/view_rss/',
             type: 'GET',
             success: function (res) {
@@ -114,11 +123,86 @@ $(document).ready(function() {
             },
             error: function (e) {
                 console.log(e);
-            },
-            complete: function () {
-                console.log('completed: ', allEntries);
             }
         });
+    }
+
+//================================================================================
+
+
+
+
+
+
+
+
+
+
+    function doWork(listEntries) {
+        var selection =[];
+        // Filter list based on words, append selected entries to html document
+
+        appendEntries(selection);
+    }
+
+
+
+    function appendEntries(listEntries) {
+        //Sorts entries and appends them to the html document
+
+        // Sorts entries so that newest articles are first
+        listEntries.sort(function(a, b) {
+            var dateA = new Date(a['publishedDate']), dateB = new Date(b['publishedDate']);
+            return dateB - dateA
+        });
+
+        for (var i = 0; i < listEntries.length; i++) {
+            var entry = listEntries[i];
+            $rssDiv.append(
+                    '<div class="list-group-item"><h4 class="list-group-item-heading">' + entry['title'] + '</h4>' +
+                    '<div><span class="label label-primary">' + entry['publishedDate'] + '</span>' +
+                    '<span><i class="fa fa-plus-square upVote" data-url="'+entry['link']+'"></i></span>' +
+                    '<span><i class="fa fa-minus-square downVote"></i></span></div>' +
+                    '<a href="' + entry['link'] + '" class="articleUrl">' +
+                    '<p class="list-group-item-text">'+entry['contentSnippet']+'</p>' +
+                    '</a></div>'
+            );
+        }
+        // add event listener to newly created icons allowing user to upvote or downvote article
+        $('i.upVote').click(function(e) {
+            console.log('upvoted' + e.target);
+            // Save the article with upvote
+//            saveRssArticle(e.target.val('url'), up)
+        });
+        $('i.downVote').click(function(e) {
+            console.log('upvoted' + e.target);
+            // Save the article with downvote
+            // saveRssArticle(e.target.val('url'), down)
+        });
+    }
+
+    function saveRssArticle(articleUrl, vote) {
+        // Saves the given article in user's profile.
+        var allArticle = JSON.stringify(articleUrl);
+        $.ajax({
+            url:'/save_article/' + vote + '/',
+            type:'POST',
+            dataType: 'json',
+            data: allArticle,
+            success: function(res) {
+                console.log(res);
+            },
+            error: function(e) {
+                console.log(e);
+            }
+        })
+    }
+
+    function readStatus() {
+        // Check for any links that have been visited("read") already and add a label 'READ' to the end of the blurb
+        // This function does not work yet. Do not know how to implement this. Might have to check history
+        console.log($('a.articleUrl'));
+        $('.articleUrl:visited').append('<span class="label label-success"> Read</span>'); // does not work
     }
 
     function addNewRssFeed(url) {
@@ -138,29 +222,15 @@ $(document).ready(function() {
         })
     }
 
-    function saveRssArticles(articleUrls) {
-        var allArticles = JSON.stringify(articleUrls);
-        $.ajax({
-            url:'/save_article/',
-            type:'/POST/',
-            dataType: 'json',
-            data: allArticles,
-            success: function(res) {
-                console.log(res);
-            },
-            error: function(e) {
-                console.log(e);
-            }
-        })
-    }
-
-
     function displayRssForm() {
+        // Creates new RSS Feed form inside the home page
+
         $rssDiv.html(
             '<div class="input-group"><span class="input-group-addon">New RSS Feed: </span>' +
             '<input class="form-control" type="text" id="newRssInput">   <span class="input-group-btn">' +
             '<button class="btn" type="button" id="addRss">Go!</button></span></div>'
         );
+        // attaches an event handler to the newly created button
         $('#addRss').click(function() {
             var newUrl = $('#newRssInput').val();
             console.log(newUrl);
@@ -169,15 +239,24 @@ $(document).ready(function() {
     }
 
 
+
+
+
+
+    // Attached all event handlers to page
+
     $('#allMyRss').click(function () {
         $rssDiv.html('');
         getRssFeed();
         console.log('final: ', allEntries);
     });
 
+    $('#refreshArticle').click(function() {
+        console.log('refreshed');
+        readStatus();
+    });
 
     $("#add-rss").on('click', function() {
         displayRssForm();
     });
-
 });
