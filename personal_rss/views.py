@@ -27,9 +27,10 @@ def profile(request):
     if not reader.profile:
         reader.profile = 'static/img/test_tube.png'
     data = {
-        'user': reader
+        'user': reader,
+        'feeds': Feed.objects.filter(reader=reader)
     }
-    return render(request, 'profile.html')
+    return render(request, 'profile.html', data)
 
 
 # def get_rss_urls(request):

@@ -1,6 +1,6 @@
 $(document).ready(function() {
     var $rssDiv = $('#newRssFeed');
-    var allKeywords = [];
+    var allKeywords = {};
 
     var allEntries = [];
     var urlsLoaded = [];
@@ -119,7 +119,6 @@ $(document).ready(function() {
             success: function (res) {
                 console.log(res);
                 googleApiCall(res);
-                console.log('googleapi completed: ', allEntries)
             },
             error: function (e) {
                 console.log(e);
@@ -127,11 +126,51 @@ $(document).ready(function() {
         });
     }
 
-//================================================================================
+// ================================================================================
 
 
 
+    function checkFeed(listEntries) {
+        var listWords=[];
+        for(var i = 0; i<listEntries.length; i++) {
+            var entry = listEntries[i];
+            listWords.append({
+                'url': entry['link'],
+                'title': entry['title'],
+                'snippet': entry['contentSnippet'],
+                'words': checkWords(entry['content'])+checkWords(entry['title']),
+                'datePub': entry['publishedDate']
+            });
+        }
+        return listWords;
+    }
 
+    function checkWords(content) {
+        var words = content.split(' ');
+        var articleWords = [];
+        for (var i = 0; i < words.length; i++) {
+            // regex to remove punctuation
+            var formattedWord = words[i].replace(/[^\w\s]/, "").toLowerCase();
+            // create new keyword object and place into totalKeyword list
+            if (formattedWord in allKeywords) {
+                allKeywords[formattedWord] += 1;
+            } else {
+                allKeywords[formattedWord] = 1;
+            }
+            articleWords.append(formattedWord);
+        }
+        console.log(allKeywords);
+        return articleWords;
+    }
+
+    function wordScore(words) {
+        var totalScore = 0;
+        for (var i = 0; i< words.length; i++) {
+            var word = words[i];
+            totalScore += allKeywords[word];
+        }
+        return totalScore;
+    }
 
 
 
@@ -142,7 +181,7 @@ $(document).ready(function() {
         var selection =[];
         // Filter list based on words, append selected entries to html document
 
-        appendEntries(selection);
+        appendEntries(listEntries);
     }
 
 
@@ -158,15 +197,32 @@ $(document).ready(function() {
 
         for (var i = 0; i < listEntries.length; i++) {
             var entry = listEntries[i];
-            $rssDiv.append(
-                    '<div class="list-group-item"><h4 class="list-group-item-heading">' + entry['title'] + '</h4>' +
-                    '<div><span class="label label-primary">' + entry['publishedDate'] + '</span>' +
-                    '<span><i class="fa fa-plus-square upVote" data-url="'+entry['link']+'"></i></span>' +
-                    '<span><i class="fa fa-minus-square downVote"></i></span></div>' +
-                    '<a href="' + entry['link'] + '" class="articleUrl">' +
-                    '<p class="list-group-item-text">'+entry['contentSnippet']+'</p>' +
-                    '</a></div>'
-            );
+//            try {
+//                var imageSrc = entry['mediaGroups'][0].contents[0].url;
+//                var imageTag = '<img class="articleImg img-responsive" src="'+imageSrc+'">';
+                var imageTag = '';
+                $rssDiv.append(
+                        '<div class="list-group-item">'+imageTag+'<h4 class="list-group-item-heading">' + entry['title'] + '</h4>' +
+                        '<div><span class="label label-primary">' + entry['publishedDate'] + '</span>' +
+                        '<span><i class="fa fa-plus-square upVote" data-url="'+entry['link']+'"></i></span>' +
+                        '<span><i class="fa fa-minus-square downVote"></i></span></div>' +
+                        '<a href="' + entry['link'] + '" class="articleUrl">' +
+                        '<p class="list-group-item-text">'+entry['contentSnippet']+'</p>' +
+                        '</a></div>'
+                );
+//            } catch (e if e instanceof TypeError) {
+//                $rssDiv.append(
+//                        '<div class="list-group-item"><h4 class="list-group-item-heading">' + entry['title'] + '</h4>' +
+//                        '<div><span class="label label-primary">' + entry['publishedDate'] + '</span>' +
+//                        '<span><i class="fa fa-plus-square upVote" data-url="'+entry['link']+'"></i></span>' +
+//                        '<span><i class="fa fa-minus-square downVote"></i></span></div>' +
+//                        '<a href="' + entry['link'] + '" class="articleUrl">' +
+//                        '<p class="list-group-item-text">'+entry['contentSnippet']+'</p>' +
+//                        '</a></div>'
+//                );
+//            } catch (e) {
+//                console.log(e);
+//            }
         }
         // add event listener to newly created icons allowing user to upvote or downvote article
         $('i.upVote').click(function(e) {
@@ -253,7 +309,8 @@ $(document).ready(function() {
 
     $('#refreshArticle').click(function() {
         console.log('refreshed');
-        readStatus();
+        $rssDiv.html('');
+        getRssFeed();
     });
 
     $("#add-rss").on('click', function() {

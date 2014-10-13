@@ -10,4 +10,9 @@
     {% else %}
         <img src="{% static 'img/test_tube.png' %}" class="img-responsive" height="200" width="200">
     {% endif %}
+    <ul>
+        {% for feed in feeds %}
+            <li>{{ feed }}</li>
+        {% endfor %}
+    </ul>
 {% endblock content %}
