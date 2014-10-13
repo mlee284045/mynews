@@ -1,3 +1,5 @@
+// Good job documenting and splitting this file out into multiple functions
+
 $(document).ready(function() {
     var $rssDiv = $('#newRssFeed');
     var allKeywords = {};
@@ -92,11 +94,14 @@ $(document).ready(function() {
 
                 feed.load(function(result) {
                     if (!result.error) {
+                        // Looks like you could just merge result.feed.entries into loadobjects
+                        // http://stackoverflow.com/questions/1584370/how-to-merge-two-arrays-in-javascript-and-de-duplicate-items
                         for (var i = 0; i < result.feed.entries.length; i++) {
 //                            console.log(result.feed.entries[i]);
                             loadobjects.push(result.feed.entries[i]);
                         }
                         urlsLoaded[opt_options.indx] = true;
+                        // and then you just merge it into allEntries anyways
                         var total = allEntries.concat(loadobjects);
                         allEntries = total;
                         console.log(allEntries);
