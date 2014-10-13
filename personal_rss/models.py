@@ -6,7 +6,7 @@ class Reader(AbstractUser):
     profile = models.ImageField(upload_to='profile_pics', null=True)
 
     def __unicode__(self):
-        return self.username
+        return u"{}".format(self.username)
 
 
 class Feed(models.Model):
@@ -14,7 +14,7 @@ class Feed(models.Model):
     reader = models.ForeignKey(Reader, related_name='feeds')
 
     def __unicode__(self):
-        return self.feed_url
+        return u"{}".format(self.feed_url)
 
 
 # class Word(models.Model):
@@ -25,4 +25,4 @@ class Article(models.Model):
     vote = models.BooleanField(default=True)
 
     def __unicode__(self):
-        return self.url
+        return u"{}".format(self.url)
