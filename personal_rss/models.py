@@ -22,7 +22,7 @@ class Feed(models.Model):
 
 class Article(models.Model):
     url = models.URLField()
-    vote = models.BooleanField(default=True)
+    # vote = models.BooleanField(default=True)
 
     def __unicode__(self):
         return self.url

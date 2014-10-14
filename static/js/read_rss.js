@@ -127,7 +127,7 @@ $(document).ready(function() {
     }
 
 // ================================================================================
-
+// Entries and Articles are used interchangeably in variable names so it may get confusing
 
 
     function checkFeed(listEntries) {
@@ -172,6 +172,7 @@ $(document).ready(function() {
         return totalScore;
     }
 
+    function sortArticles
 
 
 
@@ -198,7 +199,7 @@ $(document).ready(function() {
         for (var i = 0; i < listEntries.length; i++) {
             var entry = listEntries[i];
 //            try {
-//                var imageSrc = entry['mediaGroups'][0].contents[0].url;
+                var imageSrc = entry['mediaGroups'][0].contents[0].url;
 //                var imageTag = '<img class="articleImg img-responsive" src="'+imageSrc+'">';
                 var imageTag = '';
                 $rssDiv.append(
@@ -257,6 +258,7 @@ $(document).ready(function() {
     function readStatus() {
         // Check for any links that have been visited("read") already and add a label 'READ' to the end of the blurb
         // This function does not work yet. Do not know how to implement this. Might have to check history
+        // instead of css selector
         console.log($('a.articleUrl'));
         $('.articleUrl:visited').append('<span class="label label-success"> Read</span>'); // does not work
     }
@@ -302,12 +304,14 @@ $(document).ready(function() {
     // Attached all event handlers to page
 
     $('#allMyRss').click(function () {
+        // Button to control flow of events, make debugging a little easier.
         $rssDiv.html('');
         getRssFeed();
         console.log('final: ', allEntries);
     });
 
     $('#refreshArticle').click(function() {
+        // button was commented out
         console.log('refreshed');
         $rssDiv.html('');
         getRssFeed();
