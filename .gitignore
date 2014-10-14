@@ -1,0 +1,6 @@
+.idea/
+staticfiles/
+*.pyc
+local_settings.py
+media/
+profile_pics/
