@@ -4,3 +4,5 @@ staticfiles/
 local_settings.py
 media/
 profile_pics/
+*.conf
+*.pid

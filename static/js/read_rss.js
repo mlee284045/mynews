@@ -129,15 +129,6 @@ $(document).ready(function() {
 
 //================================================================================
 
-
-
-
-
-
-
-
-
-
     function doWork(listEntries) {
         var selection =[];
         // Filter list based on words, append selected entries to html document
