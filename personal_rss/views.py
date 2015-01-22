@@ -2,6 +2,7 @@ import json
 from django.core import serializers
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
+from django.
 from personal_rss.forms import ReaderCreationForm
 from personal_rss.models import Reader, Feed, Article
 
@@ -22,7 +23,7 @@ def register(request):
         form = ReaderCreationForm()
     return render(request, 'registration/register.html', {'form': form})
 
-
+@login_required
 def profile(request):
     name = request.user.username
     reader = Reader.objects.get(username=name)
