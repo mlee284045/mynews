@@ -15,6 +15,8 @@ def register(request):
         form = ReaderCreationForm(request.POST)
         if form.is_valid():
             form.save()
+            current_user = authenticate(username=form.cleaned_data['username'], password=form.cleaned_data['password1'])
+            login(request, current_user)
         return redirect('home')
     else:
         form = ReaderCreationForm()
