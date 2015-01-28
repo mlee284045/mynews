@@ -61,6 +61,7 @@ $(document).ready(function() {
         //
         // put into a function wrapper to help control and debug project
         function googleApiCall(urls) {
+            console.log("googleApiCall")
             google.load("feeds", "1", {
                 // make call to google and when done loading, callback the function init(urls)
                 callback: init(urls)
@@ -71,8 +72,9 @@ $(document).ready(function() {
 
                 // urlsLoaded is a parallel array(basically for each url, there is a corresponding boolean field that
                 // says if the url has finished loading
+                console.log("initializing")
                 for (var i = 0; i < urls.length; i++) {
-                    console.log(i);
+                    console.log("Running through initializing for loop");
                     urlsLoaded[i] = false;
                     loadFeed({
                         url: urls[i].feedUrl,
@@ -84,6 +86,7 @@ $(document).ready(function() {
             }
 
             function loadFeed(opt_options) {
+                console.log("Running through loadFeed")
                 // take parameters and get feed and articles from google feed
                 var loadobjects = [];
                 var url = opt_options.url;
@@ -99,13 +102,13 @@ $(document).ready(function() {
                         urlsLoaded[opt_options.indx] = true;
                         var total = allEntries.concat(loadobjects);
                         allEntries = total;
-                        console.log(allEntries);
+                        // console.log(allEntries);
                         if (urlsLoaded.every(function(el, idx, arr) {return el;})) {
-                            console.log('worked', urlsLoaded);
+                            // console.log('worked', urlsLoaded);
                             doWork(allEntries);  // function needs to be renamed, will contain the other functions
                             // replace doWork with appendEntries and it should work
                         } else {
-                            console.log('passed by', urlsLoaded);
+                            // console.log('passed by', urlsLoaded);
                         }
                     }
                 });
@@ -133,20 +136,20 @@ $(document).ready(function() {
         var selection =[];
         // Filter list based on words, append selected entries to html document
 
-        appendEntries(selection);
+        appendEntries(listEntries);
     }
 
 
 
     function appendEntries(listEntries) {
         //Sorts entries and appends them to the html document
-
         // Sorts entries so that newest articles are first
         listEntries.sort(function(a, b) {
             var dateA = new Date(a['publishedDate']), dateB = new Date(b['publishedDate']);
             return dateB - dateA
         });
-
+        console.log("sorted listEntries")
+        console.log(listEntries)
         for (var i = 0; i < listEntries.length; i++) {
             var entry = listEntries[i];
             $rssDiv.append(
@@ -228,12 +231,6 @@ $(document).ready(function() {
             addNewRssFeed(newUrl);
         })
     }
-
-
-
-
-
-
     // Attached all event handlers to page
 
     $('#allMyRss').click(function () {
@@ -248,6 +245,7 @@ $(document).ready(function() {
     });
 
     $("#add-rss").on('click', function() {
+        console.log('Yeah, add that rss feed')
         displayRssForm();
     });
 });

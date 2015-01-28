@@ -2,12 +2,13 @@ import json
 from django.core import serializers
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
-from django.
+from django.contrib.auth.decorators import login_required
 from personal_rss.forms import ReaderCreationForm
 from personal_rss.models import Reader, Feed, Article
 
 
 def home(request):
+    print "At home"
     return render(request, 'home.html')
 
 
@@ -42,16 +43,21 @@ def profile(request):
 
 
 def view_rss(request):
+    print "At view_rss"
     feedUrl = request.user.feeds.all()
+    print "\n feedUrl: {}".format(feedUrl)
     allUrls = []
+    print "\nBEFORE - allUrls: {}".format(allUrls)
     for url in feedUrl:
         allUrls.append({
             'feedUrl': url.feed_url
         })
+    print "\nAFTER - allUrls: {}".format(allUrls)
     return HttpResponse(json.dumps(allUrls), content_type='application/json')
 
 
 def add_rss(request):
+    print "At add_rss"
     if request.method == 'POST':
         data = json.loads(request.body)
         newFeed = Feed.objects.create(

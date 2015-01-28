@@ -3,7 +3,7 @@
 
 
 {% block content %}
-    <h1>Hello, World!</h1>
+    <h1>Hello, {{ user }}!</h1>
     <h3>Profile Page</h3>
     {% if user.profile %}
         <img src="{{ user.profile.url }}" class="img-responsive" height="200" width="200">
