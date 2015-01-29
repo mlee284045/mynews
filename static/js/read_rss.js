@@ -97,13 +97,9 @@ $(document).ready(function() {
                     console.log(result)
                     if (!result.error) {
                         urlsLoaded[opt_options.indx] = true;
-<<<<<<< Updated upstream
                         var total = allEntries.concat(loadobjects);
                         allEntries = total;
                         // console.log(allEntries);
-=======
-                        allEntries = loadObjects.concat(result.feed.entries);
->>>>>>> Stashed changes
                         if (urlsLoaded.every(function(el, idx, arr) {return el;})) {
                             // console.log('worked', urlsLoaded);
                             doWork(allEntries);  // function needs to be renamed, will contain the other functions
