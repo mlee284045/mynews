@@ -88,21 +88,22 @@ $(document).ready(function() {
             function loadFeed(opt_options) {
                 console.log("Running through loadFeed")
                 // take parameters and get feed and articles from google feed
-                var loadobjects = [];
+                var loadObjects = [];
                 var url = opt_options.url;
                 var feed = new google.feeds.Feed(url);
                 feed.setNumEntries(opt_options.noOfFeed);
 
                 feed.load(function(result) {
+                    console.log(result)
                     if (!result.error) {
-                        for (var i = 0; i < result.feed.entries.length; i++) {
-//                            console.log(result.feed.entries[i]);
-                            loadobjects.push(result.feed.entries[i]);
-                        }
                         urlsLoaded[opt_options.indx] = true;
+<<<<<<< Updated upstream
                         var total = allEntries.concat(loadobjects);
                         allEntries = total;
                         // console.log(allEntries);
+=======
+                        allEntries = loadObjects.concat(result.feed.entries);
+>>>>>>> Stashed changes
                         if (urlsLoaded.every(function(el, idx, arr) {return el;})) {
                             // console.log('worked', urlsLoaded);
                             doWork(allEntries);  // function needs to be renamed, will contain the other functions
