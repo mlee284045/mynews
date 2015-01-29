@@ -5,3 +5,6 @@
 - Uses Google Feed Api to pull in user selected RSS feeds
 
 Currently being worked on.  Trying to find out where I should start.
+
+Current Feature being worked on:
+- [ ] weighting articles based on articles previously read feature
