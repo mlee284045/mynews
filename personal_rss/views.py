@@ -41,21 +41,17 @@ def profile(request):
 #
 #     return
 
-
+@login_required
 def view_rss(request):
-    print "At view_rss"
-    feedUrl = request.user.feeds.all()
-    print "\n feedUrl: {}".format(feedUrl)
-    allUrls = []
-    print "\nBEFORE - allUrls: {}".format(allUrls)
-    for url in feedUrl:
-        allUrls.append({
-            'feedUrl': url.feed_url
+    feed_url = request.user.feeds.all()
+    all_urls = []
+    for url in feed_url:
+        all_urls.append({
+            'feed_url': url.feed_url
         })
-    print "\nAFTER - allUrls: {}".format(allUrls)
-    return HttpResponse(json.dumps(allUrls), content_type='application/json')
+    return HttpResponse(json.dumps(all_urls), content_type='application/json')
 
-
+@login_required
 def add_rss(request):
     print "At add_rss"
     if request.method == 'POST':
@@ -68,7 +64,7 @@ def add_rss(request):
         print response
     return HttpResponse(response, content_type='application/json')
 
-
+@login_required
 def save_article(request, vote):
     articles = []
     if vote == 'up':

@@ -77,7 +77,7 @@ $(document).ready(function() {
                     console.log("Running through initializing for loop");
                     urlsLoaded[i] = false;
                     loadFeed({
-                        url: urls[i].feedUrl,
+                        url: urls[i].feed_url,
                         indx: i,
                         noOfFeed: 4
                     });
@@ -97,8 +97,7 @@ $(document).ready(function() {
                     console.log(result)
                     if (!result.error) {
                         urlsLoaded[opt_options.indx] = true;
-                        var total = allEntries.concat(loadobjects);
-                        allEntries = total;
+                        allEntries = loadObjects.concat(result.feed.entries);
                         // console.log(allEntries);
                         if (urlsLoaded.every(function(el, idx, arr) {return el;})) {
                             // console.log('worked', urlsLoaded);
