@@ -97,11 +97,13 @@ $(document).ready(function() {
                     console.log(result)
                     if (!result.error) {
                         urlsLoaded[opt_options.indx] = true;
+                        console.log(allEntries.length)
                         allEntries = loadObjects.concat(result.feed.entries);
+                        console.log(allEntries.length)
                         // console.log(allEntries);
                         if (urlsLoaded.every(function(el, idx, arr) {return el;})) {
                             // console.log('worked', urlsLoaded);
-                            doWork(allEntries);  // function needs to be renamed, will contain the other functions
+                            chosenEntries(allEntries);  // function needs to be renamed, will contain the other functions
                             // replace doWork with appendEntries and it should work
                         } else {
                             // console.log('passed by', urlsLoaded);
@@ -128,7 +130,8 @@ $(document).ready(function() {
 
 //================================================================================
 
-    function doWork(listEntries) {
+    function chosenEntries(listEntries) {
+        console.log(listEntries[0])
         var selection =[];
         // Filter list based on words, append selected entries to html document
 
@@ -138,12 +141,16 @@ $(document).ready(function() {
 
 
     function appendEntries(listEntries) {
+        console.log("sorting")
         //Sorts entries and appends them to the html document
         // Sorts entries so that newest articles are first
+        console.log(listEntries)
         listEntries.sort(function(a, b) {
             var dateA = new Date(a['publishedDate']), dateB = new Date(b['publishedDate']);
             return dateB - dateA
         });
+        console.log(listEntries)
+        console.log("================================")
         console.log("sorted listEntries")
         console.log(listEntries)
         for (var i = 0; i < listEntries.length; i++) {
